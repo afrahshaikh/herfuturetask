@@ -1,4 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+
+final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
 
 //provider to manage input from user
 final wordProvider = StateProvider<String>((ref) => '');
@@ -26,7 +30,7 @@ class HistoryNotifier extends StateNotifier<List<String>> {
     }
   }
 
-//delete search history
+//delete search history 
   void clearState(){
     state = [];
   }
