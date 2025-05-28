@@ -30,7 +30,7 @@ class MainApp extends ConsumerWidget {
                 activeColor: Color.fromARGB(255, 229, 129, 163),
                 value: themeMode == ThemeMode.dark,
                 onChanged: (val) {
-                  ref.read(themeModeProvider.notifier).state =
+                  ref.read(themeModeProvider.notifier).state =   //managing dark mode and light mode with state
                       val ? ThemeMode.dark : ThemeMode.light;
                 },
               ),

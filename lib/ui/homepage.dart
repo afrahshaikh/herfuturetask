@@ -11,10 +11,8 @@ class HomePage extends ConsumerWidget {
     final word = ref.watch(wordProvider);
     final isPalindrome = ref.watch(isPalindromeProvider);
     final history = ref.watch(historyProvider);
-  final themeMode = ref.watch(themeModeProvider);
     return Scaffold(
       appBar: AppBar(
-      
         title: CommonText(
           text: 'Palindrome Checker',
           fontWeight: FontWeight.w500,
@@ -33,9 +31,9 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
               onChanged:
-                  (value) => ref.read(wordProvider.notifier).state = value,
+                  (value) => ref.read(wordProvider.notifier).state = value, //when value is changed it is saved in the state
               onSubmitted: (value) {
-                ref.read(historyProvider.notifier).addWord(value);
+                ref.read(historyProvider.notifier).addWord(value); //when keyboard done button is pressed from mobile word is added to the state
               },
             ),
             const SizedBox(height: 20),
@@ -51,48 +49,57 @@ class HomePage extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                  ElevatedButton(
-              onPressed: () {
-                ref
-                    .read(historyProvider.notifier)
-                    .addWord(ref.read(wordProvider.notifier).state);
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                backgroundColor: Color.fromARGB(
-                  255,
-                  229,
-                  129,
-                  163,
-                ), // Button color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), // Rounded corners
-                ),
-              ),
-              child: const Text(
-                'Submit',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
                 ElevatedButton(
                   onPressed: () {
-                   ref.read(historyProvider.notifier).clearState();
+                    ref
+                        .read(historyProvider.notifier)
+                        .addWord(ref.read(wordProvider.notifier).state);  //when submit  button is pressed the word is added to the state
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,
                       vertical: 12,
                     ),
-                    backgroundColor: Color.fromARGB(255, 38, 49, 59), // Button color
+                    backgroundColor: Color.fromARGB(
+                      255,
+                      229,
+                      129,
+                      163,
+                    ), // Button color
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // Rounded corners
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      ), // Rounded corners
+                    ),
+                  ),
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.read(historyProvider.notifier).clearState();  //clearing the state to clear search history
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    backgroundColor: Color.fromARGB(
+                      255,
+                      38,
+                      49,
+                      59,
+                    ), // Button color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      ), // Rounded corners
                     ),
                   ),
                   child: const Text(
@@ -106,30 +113,31 @@ class HomePage extends ConsumerWidget {
                 ),
               ],
             ),
-               const SizedBox(height: 10),
-            CommonText(text: 'Search History:'),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
+            CommonText(text: 'Search History:',fontSize: 18,),
+            //const SizedBox(height: 5),
             Expanded(
               child: ListView.builder(
                 itemCount: history.length,
                 itemBuilder: (_, index) {
-                   final word = history[index];
-      final cleaned = word.toLowerCase().replaceAll(RegExp(r'\W+'), '');
-      final isPal = cleaned == cleaned.split('').reversed.join('');
+                  final word = history[index];
+                  final cleaned = word.toLowerCase().replaceAll(
+                    RegExp(r'\W+'),
+                    '',
+                  );
+                  final isPal = cleaned == cleaned.split('').reversed.join(''); //checking if it is a palindrome and changing the color in the history list
                   return ListTile(
-                    leading: CommonText(text: (index+1).toString(),color:isPal ? Color.fromARGB(
-                  255,
-                  229,
-                  129,
-                  163,
-                ): Colors.black ),
-                    title: CommonText(text: history[index],color:isPal ? Color.fromARGB(
-                  255,
-                  229,
-                  129,
-                  163,
-                ): Colors.black )
-                   ,);
+                    
+                    title: Center(
+                      child: CommonText(
+                        text: "${index + 1}. ${history[index]}",
+                        color:
+                            isPal
+                                ? Color.fromARGB(255, 229, 129, 163)
+                                : Colors.black,
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
