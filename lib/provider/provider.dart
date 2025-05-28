@@ -1,6 +1,8 @@
+import 'dart:collection';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
 
@@ -14,24 +16,56 @@ final isPalindromeProvider = Provider<bool>((ref) {
   return cleaned == cleaned.split('').reversed.join('');
 });
 
+final count = StateNotifierProvider<CountNotifier, List<int>>((
+  ref,
+) {
+  return CountNotifier();
+});
+
+
+class CountNotifier extends StateNotifier<List<int>> {
+  CountNotifier() : super([]);
+
+  void addcount (){
+  state = [...state , 0];
+  log(state.toString());
+  }
+
+}
 //provider to manage history
-final historyProvider = StateNotifierProvider<HistoryNotifier, List<String>>((ref) {
+final historyProvider = StateNotifierProvider<HistoryNotifier, List<String>>((
+  ref,
+) {
   return HistoryNotifier();
 });
 
 class HistoryNotifier extends StateNotifier<List<String>> {
   HistoryNotifier() : super([]);
+  int count = 0;
+  final Map<String, int> _wordCount = {};
 
-//add word to the state
+  // Add word to the state and keep count
   void addWord(String word) {
-    if (word.trim().isEmpty) return;
-    if (!state.contains(word)) {
-      state = [...state, word];
+    word = word.trim();
+    if (word.isEmpty) return;
+
+    _wordCount[word] = (_wordCount[word] ?? 0) + 1;
+    log('"$word" called ${_wordCount[word]}.');
+
+   
+    if (state.contains(word)) {
+      state = state.where((w) => w != word).toList();
     }
+    state = [...state, word];
   }
 
+  int getCount(String word) => _wordCount[word] ?? 0;
+
+  Map<String, int> get allCounts => Map.unmodifiable(_wordCount);
+
+
 //delete search history 
-  void clearState(){
+  void clearState() {
     state = [];
   }
 }
