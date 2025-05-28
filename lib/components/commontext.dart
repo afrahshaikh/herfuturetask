@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+
+//common text created so that the app has same style throughout where ever required
 class CommonText extends StatelessWidget {
   final String text;
   final double fontSize;
